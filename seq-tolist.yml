@@ -1,0 +1,46 @@
+- hosts: localhost
+  gather_facts: false
+  vars:
+    index: 0
+    count: 25
+
+  tasks:
+    - name: register count
+      debug: 
+        msg: "index: {{ item }}"
+        verbosity: 1
+      with_sequence: start={{ index }} end={{ (index  + (count - 1)) }}
+      register: count_debug
+
+    - set_fact:
+        numberedlist: "{{ count_debug.results | map(attribute='item') | list }}"
+
+    - debug: var=numberedlist
+
+    - name: register count with even numbers
+      debug:
+        msg: "index: {{ item }}"
+        verbosity: 1
+      with_sequence: start={{ index }} end={{ (index  + (count - 1)) }} stride=2
+      register: count_debug
+
+    - set_fact:
+        numberedlist: "{{ count_debug.results | map(attribute='item') | list }}"
+
+    - debug: var=numberedlist
+
+    - name: register count with odd numbers
+      vars: 
+        index: 1
+      debug:
+        msg: "index: {{ item }}"
+        verbosity: 1
+      with_sequence: start={{ index }} end={{ (index  + (count - 1)) }} stride=2
+      register: count_debug
+
+    - set_fact:
+        numberedlist: "{{ count_debug.results | map(attribute='item') | list }}"
+
+    - debug: var=numberedlist
+
+
