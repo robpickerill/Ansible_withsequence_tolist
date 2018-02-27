@@ -6,16 +6,19 @@
 
   tasks:
     - name: register count
-      debug: 
+      debug:
         msg: "index: {{ item }}"
         verbosity: 1
       with_sequence: start={{ index }} end={{ (index  + (count - 1)) }}
       register: count_debug
 
-    - set_fact:
+    - name: marshal count to list
+      set_fact:
         numberedlist: "{{ count_debug.results | map(attribute='item') | list }}"
 
-    - debug: var=numberedlist
+    - name: print list
+      debug:
+        var: numberedlist
 
     - name: register count with even numbers
       debug:
@@ -24,13 +27,16 @@
       with_sequence: start={{ index }} end={{ (index  + (count - 1)) }} stride=2
       register: count_debug
 
-    - set_fact:
+    - name: marshal count to list
+      set_fact:
         numberedlist: "{{ count_debug.results | map(attribute='item') | list }}"
 
-    - debug: var=numberedlist
+    - name: print list
+      debug:
+        var: numberedlist
 
     - name: register count with odd numbers
-      vars: 
+      vars:
         index: 1
       debug:
         msg: "index: {{ item }}"
@@ -38,9 +44,10 @@
       with_sequence: start={{ index }} end={{ (index  + (count - 1)) }} stride=2
       register: count_debug
 
-    - set_fact:
+    - name: marshal count to list
+      set_fact:
         numberedlist: "{{ count_debug.results | map(attribute='item') | list }}"
 
-    - debug: var=numberedlist
-
-
+    - name: print list
+      debug:
+        var: numberedlist
